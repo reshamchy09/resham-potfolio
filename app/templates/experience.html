@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Experience - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 text-white relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
+        <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-2000"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="relative z-10">
+        <div class="container mx-auto px-6 pt-16 pb-12">
+            <!-- Navigation Breadcrumb -->
+            <nav class="flex items-center space-x-2 text-gray-400 mb-8">
+                <a href="/" class="hover:text-white transition-colors">Home</a>
+                <span>/</span>
+                <span class="text-cyan-400">Experience</span>
+            </nav>
+
+            <div class="max-w-4xl">
+                <h1 class="text-6xl md:text-7xl font-black mb-6 leading-none">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                        Experience
+                    </span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl leading-relaxed">
+                    A chronological journey through my professional career, highlighting key roles and achievements.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience Grid -->
+    <div class="container mx-auto px-6 pb-20 relative z-10">
+        <div class="grid gap-8 max-w-6xl mx-auto">
+            {% for experience in experiences %}
+                <article class="group relative">
+                    <!-- Experience Card -->
+                    <div class="relative bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 hover:bg-gray-800/70 hover:border-cyan-500/30 transition-all duration-500 transform hover:scale-[1.02]">
+                        <!-- Glow Effect -->
+                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <!-- Card Content -->
+                        <div class="relative z-10">
+                            <div class="flex flex-col lg:flex-row lg:items-start gap-6">
+                                <!-- Left Column: Logo & Dates -->
+                                <div class="lg:w-64 flex-shrink-0">
+                                    <!-- Company Logo -->
+                                    {% if experience.company_logo %}
+                                        <div class="mb-6">
+                                            <img src="{{ experience.company_logo.url }}" 
+                                                 alt="{{ experience.company }} logo" 
+                                                 class="w-20 h-20 object-contain rounded-xl bg-white/10 p-3 border border-gray-600">
+                                        </div>
+                                    {% else %}
+                                        <div class="mb-6 w-20 h-20 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-xl flex items-center justify-center">
+                                            <i class="fas fa-building text-2xl text-white"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Date Range -->
+                                    <div class="space-y-2 text-sm">
+                                        <div class="text-gray-400 uppercase tracking-wider font-medium">Duration</div>
+                                        <div class="text-white font-mono">
+                                            {{ experience.start_date|date:"M Y" }} — 
+                                            {% if experience.end_date %}
+                                                {{ experience.end_date|date:"M Y" }}
+                                            {% else %}
+                                                Present
+                                            {% endif %}
+                                        </div>
+                                        <div class="inline-flex items-center px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs font-medium border border-cyan-500/30">
+                                            {% if experience.end_date %}
+                                                {% widthratio experience.end_date|timeuntil:experience.start_date 365 1 %} years
+                                            {% else %}
+                                                {% widthratio "now"|date:"c"|timeuntil:experience.start_date 365 1 %} years
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    {% if experience.is_current %}
+                                        <div class="mt-4">
+                                            <div class="inline-flex items-center px-3 py-1.5 bg-green-500/20 text-green-300 rounded-full text-xs font-semibold border border-green-500/40">
+                                                <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                                                Currently Active
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Right Column: Content -->
+                                <div class="flex-1 lg:pl-8 lg:border-l lg:border-gray-700">
+                                    <!-- Position & Company -->
+                                    <header class="mb-6">
+                                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-2 leading-tight">
+                                            {{ experience.position }}
+                                        </h2>
+                                        <h3 class="text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 font-semibold">
+                                            {{ experience.company }}
+                                        </h3>
+                                    </header>
+
+                                    <!-- Description -->
+                                    <div class="prose prose-invert prose-lg max-w-none mb-6">
+                                        <div class="text-gray-300 leading-relaxed">
+                                            {{ experience.description|safe }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Skills/Technologies -->
+                                    {% if experience.skills %}
+                                        <div class="space-y-3">
+                                            <h4 class="text-sm text-gray-400 uppercase tracking-wider font-medium">Technologies & Skills</h4>
+                                            <div class="flex flex-wrap gap-2">
+                                                {% for skill in experience.skills.all %}
+                                                    <span class="px-3 py-1 bg-white/10 text-gray-300 text-sm rounded-lg border border-white/20 hover:bg-white/20 transition-colors">
+                                                        {{ skill.name }}
+                                                    </span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Decorative Elements -->
+                        <div class="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-cyan-500/30 group-hover:border-cyan-400/60 transition-colors"></div>
+                        <div class="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-purple-500/30 group-hover:border-purple-400/60 transition-colors"></div>
+                    </div>
+
+                    <!-- Connection Line (except for last item) -->
+                    {% if not forloop.last %}
+                        <div class="flex justify-center py-6">
+                            <div class="w-px h-12 bg-gradient-to-b from-gray-600 to-transparent"></div>
+                        </div>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <div class="text-center py-20">
+                    <div class="relative inline-flex items-center justify-center w-32 h-32 mb-8">
+                        <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full opacity-20 animate-ping"></div>
+                        <div class="relative bg-gray-800 rounded-full p-6 border border-gray-600">
+                            <i class="fas fa-briefcase text-4xl text-cyan-400"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-4">Experience Coming Soon</h3>
+                    <p class="text-gray-400 text-lg max-w-md mx-auto">
+                        I'm currently updating my professional experience. Check back soon for detailed information.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Resume Download Section -->
+    {% if profile.resume %}
+        <div class="container mx-auto px-6 pb-20 relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <!-- Futuristic CTA Card -->
+                <div class="relative group">
+                    <!-- Animated Border -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-75 group-hover:opacity-100 blur-sm group-hover:blur-none transition duration-500"></div>
+                    
+                    <div class="relative bg-gray-900 rounded-2xl p-8 md:p-12 text-center border border-gray-700">
+                        <!-- Icon -->
+                        <div class="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-2xl shadow-2xl">
+                            <i class="fas fa-file-code text-2xl text-white"></i>
+                        </div>
+
+                        <h3 class="text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+                            Complete Professional Profile
+                        </h3>
+                        
+                        <p class="text-gray-300 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
+                            Access my comprehensive resume with detailed project descriptions, technical specifications, and complete work history.
+                        </p>
+
+                        <a href="{% url 'download_resume' %}" 
+                           class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold text-lg rounded-xl hover:from-cyan-400 hover:to-purple-400 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-cyan-500/25 group">
+                            <i class="fas fa-download mr-3 group-hover:animate-bounce"></i>
+                            Download Full Resume
+                            <i class="fas fa-external-link-alt ml-3 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Floating Navigation Dots (Optional) -->
+    <div class="fixed right-8 top-1/2 transform -translate-y-1/2 space-y-3 z-20 hidden lg:block">
+        {% for experience in experiences %}
+            <button class="w-3 h-3 rounded-full bg-gray-600 hover:bg-cyan-400 transition-colors duration-300" 
+                    data-scroll-to="experience-{{ forloop.counter }}"></button>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+/* Custom Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+
+/* Glassmorphism for better backdrop blur support */
+@supports (backdrop-filter: blur(20px)) {
+    .backdrop-blur-xl {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+}
+
+/* Gradient Text Animation */
+@keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+}
+
+/* Custom Scrollbar for Dark Theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #06b6d4, #8b5cf6);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #0891b2, #7c3aed);
+}
+
+/* Improved Typography */
+.prose-invert {
+    --tw-prose-body: #d1d5db;
+    --tw-prose-headings: #f9fafb;
+    --tw-prose-links: #06b6d4;
+    --tw-prose-bold: #f9fafb;
+    --tw-prose-counters: #9ca3af;
+    --tw-prose-bullets: #6b7280;
+    --tw-prose-hr: #374151;
+    --tw-prose-quotes: #f9fafb;
+    --tw-prose-quote-borders: #374151;
+    --tw-prose-captions: #9ca3af;
+    --tw-prose-code: #f9fafb;
+    --tw-prose-pre-code: #d1d5db;
+    --tw-prose-pre-bg: #1f2937;
+    --tw-prose-th-borders: #374151;
+    --tw-prose-td-borders: #374151;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 768px) {
+    .text-6xl { font-size: 3rem; }
+    .text-7xl { font-size: 3.5rem; }
+}
+
+/* Focus States for Accessibility */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid #06b6d4;
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .bg-gray-900 { background: white !important; }
+    .text-white { color: black !important; }
+    .bg-gradient-to-r { background: linear-gradient(to right, #333, #666) !important; }
+    .border-gray-700 { border-color: #ccc !important; }
+}
+</style>
+
+<!-- Optional: Add smooth scrolling behavior -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for navigation dots
+    const scrollButtons = document.querySelectorAll('[data-scroll-to]');
+    scrollButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-scroll-to');
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Add intersection observer for active navigation dot
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = entry.target.getAttribute('data-index');
+                // Update active navigation dot based on visible section
+                scrollButtons.forEach((btn, idx) => {
+                    btn.classList.toggle('bg-cyan-400', idx == index);
+                    btn.classList.toggle('bg-gray-600', idx != index);
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    // Observe experience sections
+    const sections = document.querySelectorAll('article[data-index]');
+    sections.forEach(section => observer.observe(section));
+});
+</script>
+
+{% endblock %}

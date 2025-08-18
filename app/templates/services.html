@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<!-- Services Header -->
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <span class="badge bg-primary px-3 py-2 rounded-pill mb-3">
+                    <i class="fas fa-briefcase me-1"></i> What I Offer
+                </span>
+                <h1 class="display-3 gradient-text mb-4">My Services</h1>
+                <p class="lead text-secondary">
+                    I provide comprehensive digital solutions to help your business grow and succeed in the digital landscape.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Services -->
+{% if featured_services %}
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12" data-aos="fade-up">
+                <h2 class="gradient-text text-center mb-5">Featured Services</h2>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in featured_services %}
+         <div class="col-12" data-aos="fade-up" data-aos-delay="{{ item.delay }}">
+                <div class="service-card h-100 featured-service">
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-warning">
+                            <i class="fas fa-star me-1"></i> Featured
+                        </span>
+                    </div>
+                    
+                    <div class="service-icon">
+                        <i class="{{ service.icon }}"></i>
+                    </div>
+                    
+                    <h4 class="mb-3">{{ service.title }}</h4>
+                    <p class="text-secondary mb-4">{{ service.description|striptags }}</p>
+                    
+                    {% if service.price_starting %}
+                    <div class="price mb-4">
+                        <span class="h4 gradient-text">Starting at ${{ service.price_starting }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'contact' %}" class="btn btn-primary w-100">
+                        <i class="fas fa-arrow-right me-2"></i> Get Started
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- All Services -->
+{% if regular_services %}
+<section class="py-5 {% if featured_services %}bg-dark-surface{% endif %}">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12" data-aos="fade-up">
+                <h2 class="gradient-text text-center mb-5">All Services</h2>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in regular_services %}
+            <div class="col-12" data-aos="fade-up" data-aos-delay="{{ item.delay }}">
+                <div class="service-card h-100">
+                    <div class="service-icon">
+                        <i class="{{ service.icon }}"></i>
+                    </div>
+                    
+                    <h4 class="mb-3">{{ service.title }}</h4>
+                    <p class="text-secondary mb-4">{{ service.description|striptags }}</p>
+                    
+                    {% if service.price_starting %}
+                    <div class="price mb-4">
+                        <span class="h5 gradient-text">Starting at ${{ service.price_starting }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'contact' %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-envelope me-2"></i> Inquire Now
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Process Section -->
+<section class="py-5 {% if not regular_services and featured_services %}bg-dark-surface{% endif %}">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="display-4 gradient-text mb-4">My Work Process</h2>
+                <p class="lead text-secondary">
+                    Here's how I approach every project to ensure the best results for my clients.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="0">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="service-icon mb-3">
+                        <span class="h2 gradient-text">01</span>
+                    </div>
+                    <h5 class="mb-3">Discovery</h5>
+                    <p class="text-secondary">Understanding your needs, goals, and target audience to create the perfect solution.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="service-icon mb-3">
+                        <span class="h2 gradient-text">02</span>
+                    </div>
+                    <h5 class="mb-3">Planning</h5>
+                    <p class="text-secondary">Creating a detailed roadmap and strategy to achieve your project objectives efficiently.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="service-icon mb-3">
+                        <span class="h2 gradient-text">03</span>
+                    </div>
+                    <h5 class="mb-3">Development</h5>
+                    <p class="text-secondary">Building your solution using cutting-edge technologies and best practices.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="service-icon mb-3">
+                        <span class="h2 gradient-text">04</span>
+                    </div>
+                    <h5 class="mb-3">Delivery</h5>
+                    <p class="text-secondary">Testing, optimizing, and launching your project with ongoing support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technologies Used -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="display-4 gradient-text mb-4">Technologies I Use</h2>
+                <p class="lead text-secondary">
+                    I work with modern technologies and frameworks to deliver cutting-edge solutions.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4 text-center">
+            <div class="col-lg-2 col-md-3 col-4" data-aos="zoom-in" data-aos-delay="0">
+                <div class="glass-card p-3">
+                    <i class="fab fa-html5 fa-3x text-danger mb-2"></i>
+                    <h6>HTML5</h6>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-3 col-4" data-aos="zoom-in" data-aos-delay="50">
+                <div class="glass-card p-3">
+                    <i class="fab fa-css3-alt fa-3x text-primary mb-2"></i>
+                    <h6>CSS3</h6>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-3 col-4" data-aos="zoom-in" data-aos-delay="100">
+                <div class="glass-card p-3">
+                    <i class="fab fa-js-square fa-3x text-warning mb-2"></i>
+                    <h6>JavaScript</h6>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-3 col-4" data-aos="zoom-in" data-aos-delay="150">
+                <div class="glass-card p-3">
+                    <i class="fab fa-python fa-3x text-success mb-2"></i>
+                    <h6>Python</h6>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-3 col-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="glass-card p-3">
+                    <i class="fab fa-react fa-3x text-info mb-2"></i>
+                    <h6>React</h6>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-3 col-4" data-aos="zoom-in" data-aos-delay="250">
+                <div class="glass-card p-3">
+                    <i class="fab fa-node-js fa-3x text-success mb-2"></i>
+                    <h6>Node.js</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-dark-surface">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="display-4 gradient-text mb-4">Ready to Get Started?</h2>
+                <p class="lead text-secondary mb-5">
+                    Let's discuss your project and see how I can help you achieve your goals.
+                </p>
+                
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket me-2"></i> Start Your Project
+                    </a>
+                    <a href="{% url 'projects' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-eye me-2"></i> View Portfolio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Empty State -->
+{% if not all_services %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <div class="glass-card p-5">
+                    <i class="fas fa-briefcase fa-5x text-primary mb-4"></i>
+                    <h3 class="gradient-text mb-3">Services Coming Soon</h3>
+                    <p class="text-secondary mb-4">Services will be displayed here once added through the admin panel.</p>
+                    <a href="{% url 'contact' %}" class="btn btn-primary">
+                        <i class="fas fa-envelope me-2"></i> Contact for Custom Services
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Service card hover effects
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            gsap.to(this, {
+                y: -15,
+                scale: 1.02,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        card.addEventListener('mouseleave', function() {
+            gsap.to(this, {
+                y: 0,
+                scale: 1,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    // Technology icons animation
+    document.querySelectorAll('.glass-card i.fab').forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            gsap.to(this, {
+                scale: 1.2,
+                rotation: 10,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        icon.addEventListener('mouseleave', function() {
+            gsap.to(this, {
+                scale: 1,
+                rotation: 0,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    // Process steps animation
+    ScrollTrigger.create({
+        trigger: '.process-section',
+        start: 'top 80%',
+        onEnter: () => {
+            gsap.fromTo('.glass-card', 
+                { opacity: 0, y: 50 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.6,
+                    stagger: 0.1,
+                    ease: 'power2.out'
+                }
+            );
+        }
+    });
+</script>
+{% endblock %}

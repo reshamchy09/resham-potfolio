@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Back Button -->
+    <div class="mb-8">
+        <a href="{% url 'projects' %}" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition duration-300">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Projects
+        </a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Project Image -->
+        {% if project.image %}
+            <div class="w-full h-96 overflow-hidden">
+                <img src="{{ project.image.url }}" alt="{{ project.title }}" class="w-full h-full object-cover">
+            </div>
+        {% endif %}
+
+        <div class="p-8">
+            <!-- Project Header -->
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
+                <div class="mb-4 lg:mb-0">
+                    <div class="flex items-center gap-4 mb-2">
+                        <h1 class="text-3xl font-bold text-gray-800">{{ project.title }}</h1>
+                        {% if project.is_featured %}
+                            <span class="bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full">Featured Project</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-gray-600">Created on {{ project.created_date|date:"F d, Y" }}</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    {% if project.demo_url %}
+                        <a href="{{ project.demo_url }}" target="_blank" 
+                           class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            Live Demo
+                        </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" 
+                           class="inline-flex items-center px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition duration-300">
+                            <i class="fab fa-github mr-2"></i>
+                            View Code
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Technology Stack -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Technology Stack</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for tech in project.get_tech_list %}
+                        <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-2 rounded-full">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Project Description -->
+            <div class="mb-12">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Project Description</h3>
+                <div class="prose prose-lg max-w-none text-gray-700">
+                    {{ project.description|safe }}
+                </div>
+            </div>
+
+            <!-- Related Projects -->
+            {% if related_projects %}
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">Related Projects</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {% for related in related_projects %}
+                            <div class="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition duration-300">
+                                {% if related.image %}
+                                    <img src="{{ related.image.url }}" alt="{{ related.title }}" class="w-full h-32 object-cover">
+                                {% else %}
+                                    <div class="w-full h-32 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                                        <span class="text-white font-bold">{{ related.title|truncatechars:10 }}</span>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="p-4">
+                                    <h4 class="font-semibold text-gray-800 mb-2">{{ related.title }}</h4>
+                                    <p class="text-sm text-gray-600 mb-3">{{ related.description|truncatewords:15|striptags }}</p>
+                                    <a href="{% url 'project_detail' related.pk %}" 
+                                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                        View Project →
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
