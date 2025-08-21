@@ -13,4 +13,9 @@ urlpatterns = [
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
     path('contact/', views.contact, name='contact'),
     path('download-resume/', views.download_resume, name='download_resume'),
+    path('templates/', views.template_list, name='template_list'),
+    path('templates/<int:pk>/preview/', views.template_preview, name='template_preview'),
+     path('calculator/', views.services_page, name='mobile_app_calculator'),
+    
+
 ]

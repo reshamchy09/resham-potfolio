@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import *
+from django.utils.html import format_html
+from .models import ProjectTemplate
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -71,3 +73,18 @@ class ContactAdmin(admin.ModelAdmin):
     list_filter = ['is_read', 'created_at']
     readonly_fields = ['name', 'email', 'subject', 'message', 'created_at']
     list_editable = ['is_read']
+
+@admin.register(ProjectTemplate)
+class ProjectTemplateAdmin(admin.ModelAdmin):
+    list_display = ('title', 'icon_tag', 'template_type', 'url', 'uploaded_at')
+    search_fields = ('title', 'description', 'url')
+    list_filter = ('template_type', 'uploaded_at')
+    ordering = ('-uploaded_at',)
+
+    # Show small icon in list display
+    def icon_tag(self, obj):
+        if obj.icon:
+            return format_html('<img src="{}" style="width:40px; height:40px; object-fit:cover; border-radius:5px;" />', obj.icon.url)
+        return "-"
+    icon_tag.short_description = 'Icon'
+

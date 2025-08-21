@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Order Form</title>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+<style>
+body { font-family: Arial; padding:20px; background:#f0f2f5; }
+h1 { text-align:center; }
+form { max-width:600px; margin:0 auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+label { display:block; margin-top:10px; }
+input[type=text], input[type=email], input[type=tel], textarea { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; margin-top:5px; }
+.features { margin-top:15px; }
+.feature-item { display:flex; justify-content:space-between; margin:5px 0; }
+#total-price, #half-price { font-weight:bold; }
+button { margin-top:20px; padding:10px 15px; border:none; border-radius:5px; background:#007BFF; color:#fff; cursor:pointer; }
+button:hover { background:#0056b3; }
+img { margin-top:10px; width:150px; }
+</style>
+</head>
+<body>
+
+<h1>Order Your App</h1>
+<form id="order-form">
+  <label>Email <input type="email" id="email" required></label>
+  <label>Name <input type="text" id="name" required></label>
+  <label>Phone <input type="tel" id="phone" required></label>
+  <label>Address <textarea id="address" rows="2" required></textarea></label>
+  <label>App Name <input type="text" id="appName" required></label>
+  <label>App Description <textarea id="appDescription" rows="4" required></textarea>
+
+  <div class="features">
+    <h3>Select Features</h3>
+    <div id="user-features">Loading features...</div>
+  </div>
+
+  <p>Total Price: $<span id="total-price">0</span></p>
+  <p>Half Payment (Khalti): $<span id="half-price">0</span></p>
+  <img src="khalti_qr.png" alt="Khalti QR">
+
+  <button type="submit">Submit Order</button>
+</form>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, child, push, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCFkXZyQxt10JpxkVG8LkJcGrxIYP4Xisc",
+  authDomain: "earningapp-d0a9a.firebaseapp.com",
+  projectId: "earningapp-d0a9a",
+  storageBucket: "earningapp-d0a9a.firebasestorage.app",
+  messagingSenderId: "728888491246",
+  appId: "1:728888491246:web:8062a7d77d5ed3782f87ff",
+  measurementId: "G-3H79SGTBX3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const userContainer = document.getElementById('user-features');
+const totalPriceEl = document.getElementById('total-price');
+const halfPriceEl = document.getElementById('half-price');
+const form = document.getElementById('order-form');
+
+let appConfig = { mainPrice: 1000, features: {} };
+
+async function loadFeatures() {
+  try {
+    const dbRef = ref(db);
+    const snapshot = await get(child(dbRef, 'appConfig'));
+    if (snapshot.exists()) {
+      appConfig = snapshot.val();
+      if (!appConfig.features) appConfig.features = {};
+    } else {
+      console.warn("No appConfig data found in Firebase.");
+      userContainer.innerHTML = 'No features available yet.';
+    }
+    renderFeatures();
+  } catch (error) {
+    console.error("Error loading features:", error);
+    userContainer.innerHTML = 'Error loading features. Please try again later.';
+  }
+}
+
+function renderFeatures() {
+  userContainer.innerHTML = '';
+  const features = Object.entries(appConfig.features);
+  if (features.length === 0) {
+    userContainer.innerHTML = 'No features available yet.';
+    return;
+  }
+  features.forEach(([feature, percent]) => {
+    const div = document.createElement('div');
+    div.className = 'feature-item';
+    div.innerHTML = `<label><input type="checkbox" data-percent="${percent}"> ${feature}</label>
+                     <span>${percent}%</span>`;
+    userContainer.appendChild(div);
+  });
+
+  userContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener('change', calculateTotal));
+  calculateTotal();
+}
+
+function calculateTotal() {
+  let mainPrice = parseFloat(appConfig.mainPrice || 1000);
+  let total = mainPrice;
+
+  userContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+    const percent = parseFloat(cb.dataset.percent);
+    total += mainPrice * (percent / 100) * 1.1;
+  });
+
+  totalPriceEl.textContent = total.toFixed(2);
+  halfPriceEl.textContent = (total / 2).toFixed(2);
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const address = document.getElementById('address').value;
+  const appName = document.getElementById('appName').value;
+  const appDescription = document.getElementById('appDescription').value;
+
+  const selectedFeatures = [];
+  userContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => selectedFeatures.push(cb.parentElement.textContent.trim()));
+
+  const totalPrice = parseFloat(totalPriceEl.textContent);
+  const halfPayment = parseFloat(halfPriceEl.textContent);
+
+  const orderData = {
+    email, name, phone, address, appName, appDescription, selectedFeatures,
+    totalPrice, halfPayment, date: new Date().toISOString()
+  };
+
+  try {
+    const newOrderRef = push(ref(db, 'orders'));
+    await set(newOrderRef, orderData);
+
+    const whatsappMessage = `New Order:\nApp Name: ${appName}\nDescription: ${appDescription}\nFeatures: ${selectedFeatures.join(', ')}\nTotal Price: $${totalPrice.toFixed(2)}\nHalf Payment: $${halfPayment.toFixed(2)}\nPlease send the half payment screenshot via Khalti.`;
+    const whatsappURL = `https://wa.me/9860485752?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(whatsappURL, '_blank');
+
+    alert('Order submitted successfully! Please send the half payment screenshot via WhatsApp.');
+    form.reset();
+    calculateTotal();
+  } catch (error) {
+    console.error("Error submitting order:", error);
+    alert('Error submitting order. Please try again.');
+  }
+});
+
+loadFeatures();
+</script>
+</body>
+</html>

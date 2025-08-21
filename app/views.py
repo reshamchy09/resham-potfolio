@@ -8,6 +8,7 @@ from django.db.models import Q
 from .models import *
 from .forms import ContactForm
 import os
+from .models import ProjectTemplate
 
 def get_profile():
     """Get the first profile or return None"""
@@ -201,3 +202,29 @@ def download_resume(request):
                 response['Content-Disposition'] = f'attachment; filename="{profile.name}_Resume.pdf"'
                 return response
     raise Http404("Resume not found")
+
+def template_list(request):
+    filter_type = request.GET.get('type')  # 'app', 'website', or None
+    if filter_type in ['app', 'website']:
+        templates = ProjectTemplate.objects.filter(template_type=filter_type)
+    else:
+        templates = ProjectTemplate.objects.all()
+    return render(request, "template_list.html", {"templates": templates, "filter_type": filter_type})
+
+
+def template_preview(request, pk):
+    template = get_object_or_404(ProjectTemplate, pk=pk)
+    return render(request, "template_preview.html", {
+        "template": template
+    })
+
+from django.shortcuts import render
+
+
+def services_page(request):
+    profile = Profile.objects.first()  # assuming only one profile
+    context = {
+        'profile': profile,
+    }
+    return render(request, 'mobile_app_calculator.html', context)
+

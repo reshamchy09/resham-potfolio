@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School Management System Setup</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f8fb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #0077cc;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    fieldset {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    legend {
+      font-weight: bold;
+      color: #444;
+    }
+
+    .feature-section {
+      margin-top: 20px;
+    }
+
+    .feature-section h3 {
+      background: #0077cc;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 10px;
+    }
+
+    .checkbox-grid label {
+      background: #f0f4f7;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button {
+      margin-top: 30px;
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>School Management System Setup</h1>
+    <form id="schoolForm">
+      <label>School Name: <input type="text" name="schoolName"></label>
+      <label>Address: <input type="text" name="schoolAddress"></label>
+      <label>Email: <input type="email" name="email"></label>
+      <label>Phone: <input type="text" name="phone"></label>
+      <label>Admin Name: <input type="text" name="adminName"></label>
+      <label>Admin Email: <input type="email" name="adminEmail"></label>
+      <label>Number of Students: <input type="number" name="students"></label>
+      <label>Number of Teachers: <input type="number" name="teachers"></label>
+      <label>Number of Staff: <input type="number" name="staff"></label>
+
+      <fieldset>
+        <legend>Payment Gateway</legend>
+        <label><input type="checkbox" name="gateway" value="eSewa"> eSewa</label>
+        <label><input type="checkbox" name="gateway" value="Khalti"> Khalti</label>
+        <label><input type="checkbox" name="gateway" value="Stripe"> Stripe</label>
+      </fieldset>
+
+      <!-- Feature Sections -->
+      <div class="feature-section">
+        <h3>Admin Panel (प्रिन्सिपल)</h3>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="features" value="Live Dashboard"> Live Dashboard – प्रत्यक्ष ड्यासबोर्ड</label>
+          <label><input type="checkbox" name="features" value="Activity Feed"> Activity Feed – गतिविधि फिड</label>
+          <label><input type="checkbox" name="features" value="User Management"> User Management – प्रयोगकर्ता व्यवस्थापन</label>
+          <label><input type="checkbox" name="features" value="Bulk Upload via Excel"> Bulk Upload via Excel – थोक डाटा</label>
+          <label><input type="checkbox" name="features" value="Class Management"> Class Management – कक्षा व्यवस्थापन</label>
+          <label><input type="checkbox" name="features" value="Timetable Generator"> Timetable Generator – समय तालिका</label>
+          <label><input type="checkbox" name="features" value="Exam Management"> Exam Management – परीक्षा प्रणाली</label>
+          <label><input type="checkbox" name="features" value="Fee Management"> Fee Management – शुल्क व्यवस्था</label>
+          <label><input type="checkbox" name="features" value="Academic Resources"> Academic Resources – नोट्स/भिडियो</label>
+          <label><input type="checkbox" name="features" value="Advanced Reports"> Advanced Reports – विश्लेषण</label>
+          <label><input type="checkbox" name="features" value="Notices & Alerts"> Notices & Alerts – सचूना</label>
+          <label><input type="checkbox" name="features" value="Certificate Generator"> Certificate Generator – प्रमाणपत्र</label>
+          <label><input type="checkbox" name="features" value="AI Tools"> AI Tools – प्रश्न बनाउने</label>
+          <label><input type="checkbox" name="features" value="Smart Calendar"> Smart Calendar – स्मार्ट पात्रो</label>
+          <label><input type="checkbox" name="features" value="Multi-role Access"> Multi-role Access – अनुमति</label>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <h3>Teachers</h3>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="features" value="Role-Based Dashboard"> Role-Based Dashboard – भूमिकाअनुसार</label>
+          <label><input type="checkbox" name="features" value="Attendance QR"> Attendance – QR/बायोमेट्रिक</label>
+          <label><input type="checkbox" name="features" value="Homework Management"> Homework Management – गृहकार्य</label>
+          <label><input type="checkbox" name="features" value="Upload Notes"> Upload Notes – PDF/Video</label>
+          <label><input type="checkbox" name="features" value="Live Class"> Conduct Live Class – Zoom/Meet</label>
+          <label><input type="checkbox" name="features" value="Exam Marks Entry"> Exam Marks Entry – अंक</label>
+          <label><input type="checkbox" name="features" value="Teacher Analytics"> Analytics – ट्र्याक</label>
+          <label><input type="checkbox" name="features" value="Teacher Messaging"> Messaging & Alerts</label>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <h3>Students</h3>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="features" value="Personal Dashboard"> Personal Dashboard</label>
+          <label><input type="checkbox" name="features" value="Homework Panel"> Homework Panel</label>
+          <label><input type="checkbox" name="features" value="View Timetable"> View Timetable & Notices</label>
+          <label><input type="checkbox" name="features" value="Download Notes"> Download Notes</label>
+          <label><input type="checkbox" name="features" value="View Results"> View Results</label>
+          <label><input type="checkbox" name="features" value="Online Class Link"> Online Class Link</label>
+          <label><input type="checkbox" name="features" value="Student Fee Management"> Fee Management</label>
+          <label><input type="checkbox" name="features" value="Chat with Teacher"> Chat with Teacher</label>
+          <label><input type="checkbox" name="features" value="AI Assistant"> AI Assistant – अनुवाद</label>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <h3>Parents</h3>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="features" value="Parent Dashboard"> Dashboard – Attendance, Fee, Marks</label>
+          <label><input type="checkbox" name="features" value="Track Bus"> Track Bus – Real-Time GPS</label>
+          <label><input type="checkbox" name="features" value="Homework Tracker"> Homework Tracker</label>
+          <label><input type="checkbox" name="features" value="View Report"> View Full Report</label>
+          <label><input type="checkbox" name="features" value="Parent Announcements"> Announcements</label>
+          <label><input type="checkbox" name="features" value="Chat with Class Teacher"> Chat with Class Teacher</label>
+          <label><input type="checkbox" name="features" value="Push Alerts"> Push Alerts</label>
+          <label><input type="checkbox" name="features" value="Leave Requests"> Leave Requests</label>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <h3>Bus Drivers</h3>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="features" value="Route View"> Route View</label>
+          <label><input type="checkbox" name="features" value="Student Check-In"> Student Check-In/Out</label>
+          <label><input type="checkbox" name="features" value="GPS Tracking"> GPS Tracking</label>
+          <label><input type="checkbox" name="features" value="Emergency Alerts"> Emergency Alerts</label>
+          <label><input type="checkbox" name="features" value="Fuel Logs"> Fuel & Maintenance Logs</label>
+          <label><input type="checkbox" name="features" value="Pickup Report"> Daily Pickup Report</label>
+          <label><input type="checkbox" name="features" value="Upload Incidents"> Upload Incidents</label>
+          <label><input type="checkbox" name="features" value="Trip History"> View Trip History</label>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <h3>Smart & AI Features</h3>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="features" value="QR/NFC Attendance"> QR/NFC Attendance</label>
+          <label><input type="checkbox" name="features" value="Face Detection"> Face Detection (Optional)</label>
+          <label><input type="checkbox" name="features" value="AI Chat Assistant"> AI Chat Assistant</label>
+          <label><input type="checkbox" name="features" value="Real-Time Alerts"> Real-Time Alerts</label>
+          <label><input type="checkbox" name="features" value="Offline Sync"> Offline Sync</label>
+          <label><input type="checkbox" name="features" value="Certificate Auto Generation"> Certificate Auto Generation</label>
+          <label><input type="checkbox" name="features" value="Report Auto Generation"> Report Auto Generation – PDF/Excel</label>
+          <label><input type="checkbox" name="features" value="Multilingual"> Multilingual Translation</label>
+          <label><input type="checkbox" name="features" value="Push via FCM"> Push Notifications via FCM</label>
+        </div>
+      </div>
+
+      <button type="button" onclick="generatePDF()">Generate PDF</button>
+    </form>
+  </div>
+
+  <script>
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const form = document.getElementById("schoolForm");
+      let y = 10;
+
+      doc.setFontSize(16);
+      doc.text("School Setup Summary", 10, y);
+      y += 10;
+
+      const fields = [
+        ["School Name", form.schoolName.value],
+        ["Address", form.schoolAddress.value],
+        ["Email", form.email.value],
+        ["Phone", form.phone.value],
+        ["Admin Name", form.adminName.value],
+        ["Admin Email", form.adminEmail.value],
+        ["Students", form.students.value],
+        ["Teachers", form.teachers.value],
+        ["Staff", form.staff.value],
+      ];
+
+      fields.forEach(([label, value]) => {
+        doc.setFontSize(11);
+        doc.text(`${label}: ${value}`, 10, y);
+        y += 6;
+      });
+
+      const gateways = [...form.gateway].filter(i => i.checked).map(i => i.value).join(", ");
+      doc.text(`Payment Gateway: ${gateways}`, 10, y);
+      y += 10;
+
+      doc.setFontSize(13);
+      doc.text("Selected Features:", 10, y);
+      y += 7;
+
+      const features = [...form.features].filter(i => i.checked).map(i => i.parentElement.textContent.trim());
+      doc.setFontSize(11);
+      features.forEach(f => {
+        doc.text(`☑ ${f}`, 12, y);
+        y += 6;
+        if (y > 270) {
+          doc.addPage();
+          y = 10;
+        }
+      });
+
+      doc.save("School_Setup_Features.pdf");
+    }
+  </script>
+</body>
+</html>

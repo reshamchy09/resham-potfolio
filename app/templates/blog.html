@@ -4,92 +4,86 @@
 {% block title %}Blog - {{ profile.name }}{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Blog</h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+<div class="container-fluid px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-12 fade-in-up animate">
+        <h1 class="display-3 gradient-text">Blog</h1>
+        <p class="lead text-glow text-secondary max-w-2xl mx-auto">
             Thoughts, tutorials, and insights about web development, technology, and more
         </p>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <form method="GET" class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
+    <!-- Search and Filter -->
+    <div class="glass-card p-6 mb-8 animate">
+        <form method="GET" class="row g-3">
+            <div class="col-12 col-md-6 col-lg-5">
                 <input type="text" 
                        name="search" 
                        value="{{ search_query }}" 
                        placeholder="Search blog posts..." 
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="form-control bg-transparent text-white border-primary"
+                       aria-label="Search blog posts">
             </div>
-            <div class="flex-1">
-                <select name="tag" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <div class="col-12 col-md-6 col-lg-4">
+                <select name="tag" class="form-control bg-transparent text-white border-primary">
                     <option value="">All Tags</option>
                     {% for tag in all_tags %}
                         <option value="{{ tag }}" {% if tag == tag_filter %}selected{% endif %}>{{ tag }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
-                Search
-            </button>
-            {% if search_query or tag_filter %}
-                <a href="{% url 'blog' %}" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300">
-                    Clear
-                </a>
-            {% endif %}
+            <div class="col-12 col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">
+                    <i class="fas fa-search me-2"></i> Search
+                </button>
+                {% if search_query or tag_filter %}
+                    <a href="{% url 'blog' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                {% endif %}
+            </div>
         </form>
     </div>
 
     <!-- Blog Posts Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    <div class="row g-6 mb-12">
         {% for blog in blogs %}
-            <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
-                {% if blog.featured_image %}
-                    <div class="h-48 overflow-hidden">
-                        <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
-                    </div>
-                {% else %}
-                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                        <span class="text-white text-xl font-bold">{{ blog.title|truncatechars:10 }}</span>
-                    </div>
-                {% endif %}
-                
-                <div class="p-6">
-                    <div class="flex items-center text-sm text-gray-500 mb-2">
-                        <i class="far fa-calendar mr-2"></i>
-                        <span>{{ blog.created_at|date:"F d, Y" }}</span>
-                    </div>
-                    
-                    <h2 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">{{ blog.title }}</h2>
-                    
-                    <p class="text-gray-600 mb-4 line-clamp-3">{{ blog.excerpt }}</p>
-                    
-                    <!-- Tags -->
-                    {% if blog.get_tags_list %}
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            {% for tag in blog.get_tags_list %}
-                                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded">{{ tag }}</span>
-                            {% endfor %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <article class="blog-card h-100 animate">
+                    {% if blog.featured_image %}
+                        <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" class="blog-image w-100" loading="lazy">
+                    {% else %}
+                        <div class="blog-image w-100 bg-gradient-2 d-flex align-items-center justify-content-center">
+                            <span class="text-white fs-5 fw-bold">{{ blog.title|truncatechars:15 }}</span>
                         </div>
                     {% endif %}
-                    
-                    <a href="{% url 'blog_detail' blog.slug %}" 
-                       class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
-                        Read More
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
-            </article>
+                    <div class="card-body">
+                        <div class="text-muted small mb-2">
+                            <i class="far fa-calendar me-2"></i>
+                            {{ blog.created_at|date:"F d, Y" }}
+                        </div>
+                        <h2 class="h5 text-white mb-3 line-height-sm">{{ blog.title }}</h2>
+                        <p class="text-secondary mb-4">{{ blog.excerpt|truncatewords:20 }}</p>
+                        {% if blog.get_tags_list %}
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                {% for tag in blog.get_tags_list %}
+                                    <span class="tech-tag">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <a href="{% url 'blog_detail' blog.slug %}" class="btn btn-outline-primary btn-sm">
+                            Read More
+                        </a>
+                    </div>
+                </article>
+            </div>
         {% empty %}
-            <div class="col-span-full text-center py-12">
-                <div class="text-gray-500 mb-4">
-                    <i class="fas fa-search text-4xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">No blog posts found</h3>
-                <p class="text-gray-500">Try adjusting your search criteria or browse all posts.</p>
+            <div class="col-12 text-center py-12">
+                <i class="fas fa-newspaper text-secondary" style="font-size: 4rem;"></i>
+                <h3 class="h4 text-white mt-3">No blog posts found</h3>
+                <p class="text-secondary">Try adjusting your search or browse all posts.</p>
                 {% if search_query or tag_filter %}
-                    <a href="{% url 'blog' %}" class="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                    <a href="{% url 'blog' %}" class="btn btn-primary mt-3">
                         View All Posts
                     </a>
                 {% endif %}
@@ -99,44 +93,31 @@
 
     <!-- Pagination -->
     {% if blogs.has_other_pages %}
-        <div class="flex justify-center">
-            <nav class="flex space-x-2">
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination">
                 {% if blogs.has_previous %}
-                    <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page=1" 
-                       class="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">First</a>
-                    <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page={{ blogs.previous_page_number }}" 
-                       class="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Previous</a>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page={{ blogs.previous_page_number }}">Previous</a>
+                    </li>
                 {% endif %}
 
-                <span class="px-3 py-2 bg-blue-600 text-white rounded-md">
-                    Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}
-                </span>
+                <li class="page-item active">
+                    <span class="page-link">Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}</span>
+                </li>
 
                 {% if blogs.has_next %}
-                    <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page={{ blogs.next_page_number }}" 
-                       class="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Next</a>
-                    <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page={{ blogs.paginator.num_pages }}" 
-                       class="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Last</a>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page={{ blogs.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if tag_filter %}tag={{ tag_filter }}&{% endif %}page={{ blogs.paginator.num_pages }}">Last</a>
+                    </li>
                 {% endif %}
-            </nav>
-        </div>
+            </ul>
+        </nav>
     {% endif %}
 </div>
-
-<style>
-/* Line clamp utilities */
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-</style>
 {% endblock %}

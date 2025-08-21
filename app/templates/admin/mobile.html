@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+<style>
+body { font-family: Arial; padding:20px; background:#f0f2f5; }
+h1, h2 { text-align:center; }
+.card { background:#fff; padding:20px; border-radius:10px; max-width:700px; margin:20px auto; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+.feature-item { display:flex; justify-content:space-between; margin:8px 0; }
+input[type=text], input[type=number] { padding:5px; border-radius:5px; border:1px solid #ccc; }
+input[type=number] { width:80px; }
+button { padding:8px 12px; border:none; border-radius:5px; background:#007BFF; color:#fff; cursor:pointer; margin-top:10px; }
+button:hover { background:#0056b3; }
+#add-feature { display:flex; margin-top:20px; gap:10px; }
+.order-item { margin:10px 0; padding:10px; border:1px solid #ccc; border-radius:5px; }
+</style>
+</head>
+<body>
+
+<h1>Admin Panel</h1>
+<div class="card">
+  <label>Main App Price $: <input type="number" id="main-price" min="0" value="1000"></label>
+
+  <div id="admin-features"></div>
+
+  <div id="add-feature">
+    <input type="text" id="new-feature-name" placeholder="New Feature Name">
+    <input type="number" id="new-feature-percent" placeholder="Percent %" min="0" max="100" value="12">
+    <button id="add-feature-btn">Add Feature</button>
+  </div>
+
+  <button id="save-prices">Save All Changes</button>
+</div>
+
+<div class="card">
+  <h2>Submitted Orders</h2>
+  <div id="orders-list">Loading orders...</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, child, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCFkXZyQxt10JpxkVG8LkJcGrxIYP4Xisc",
+  authDomain: "earningapp-d0a9a.firebaseapp.com",
+  projectId: "earningapp-d0a9a",
+  storageBucket: "earningapp-d0a9a.firebasestorage.app",
+  messagingSenderId: "728888491246",
+  appId: "1:728888491246:web:8062a7d77d5ed3782f87ff",
+  measurementId: "G-3H79SGTBX3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const adminContainer = document.getElementById('admin-features');
+const ordersContainer = document.getElementById('orders-list');
+const saveBtn = document.getElementById('save-prices');
+const addBtn = document.getElementById('add-feature-btn');
+const newFeatureInput = document.getElementById('new-feature-name');
+const newFeaturePercent = document.getElementById('new-feature-percent');
+const mainPriceInput = document.getElementById('main-price');
+
+let featurePercent = {};
+
+async function loadFeatures() {
+  try {
+    const dbRef = ref(db);
+    const snapshot = await get(child(dbRef, 'appConfig'));
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      mainPriceInput.value = data.mainPrice || 1000;
+      featurePercent = data.features || {};
+    } else {
+      featurePercent = {};
+    }
+    renderFeatures();
+  } catch (error) {
+    console.error("Error loading features:", error);
+    adminContainer.innerHTML = 'Error loading features.';
+  }
+}
+
+function renderFeatures() {
+  adminContainer.innerHTML = '';
+  Object.entries(featurePercent).forEach(([feature, percent]) => {
+    const div = document.createElement('div');
+    div.className = 'feature-item';
+    div.innerHTML = `
+      <input type="text" value="${feature}" data-feature="${feature}">
+      <input type="number" min="0" max="100" value="${percent}" data-percent="${feature}"> %
+    `;
+    adminContainer.appendChild(div);
+  });
+}
+
+async function loadOrders() {
+  try {
+    const dbRef = ref(db);
+    const snapshot = await get(child(dbRef, 'orders'));
+    ordersContainer.innerHTML = '';
+    if (snapshot.exists()) {
+      const orders = snapshot.val();
+      Object.entries(orders).forEach(([id, order]) => {
+        const div = document.createElement('div');
+        div.className = 'order-item';
+        div.innerHTML = `
+          <p><strong>Order ID:</strong> ${id}</p>
+          <p><strong>Name:</strong> ${order.name}</p>
+          <p><strong>Email:</strong> ${order.email}</p>
+          <p><strong>Phone:</strong> ${order.phone}</p>
+          <p><strong>Address:</strong> ${order.address}</p>
+          <p><strong>App Name:</strong> ${order.appName}</p>
+          <p><strong>App Description:</strong> ${order.appDescription || 'N/A'}</p>
+          <p><strong>Features:</strong> ${order.selectedFeatures.join(', ')}</p>
+          <p><strong>Total Price:</strong> $${order.totalPrice.toFixed(2)}</p>
+          <p><strong>Half Payment:</strong> $${order.halfPayment.toFixed(2)}</p>
+          <p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+        `;
+        ordersContainer.appendChild(div);
+      });
+    } else {
+      ordersContainer.innerHTML = 'No orders found.';
+    }
+  } catch (error) {
+    console.error("Error loading orders:", error);
+    ordersContainer.innerHTML = 'Error loading orders.';
+  }
+}
+
+addBtn.addEventListener('click', () => {
+  const name = newFeatureInput.value.trim();
+  const percent = parseFloat(newFeaturePercent.value);
+  if (!name) { alert('Enter feature name'); return; }
+  featurePercent[name] = percent;
+  newFeatureInput.value = '';
+  newFeaturePercent.value = '12';
+  renderFeatures();
+});
+
+saveBtn.addEventListener('click', async () => {
+  const nameInputs = adminContainer.querySelectorAll('input[type="text"]');
+  const percentInputs = adminContainer.querySelectorAll('input[type="number"]');
+  const updatedFeatures = {};
+
+  nameInputs.forEach(input => {
+    const oldFeature = input.dataset.feature;
+    const newFeature = input.value.trim();
+    const percent = parseFloat(percentInputs.find(p => p.dataset.percent === oldFeature).value);
+    if (newFeature) updatedFeatures[newFeature] = percent;
+  });
+
+  const mainPriceValue = parseFloat(mainPriceInput.value);
+  try {
+    await set(ref(db, 'appConfig'), { mainPrice: mainPriceValue, features: updatedFeatures });
+    featurePercent = updatedFeatures;
+    alert('App price & features updated successfully!');
+    renderFeatures();
+  } catch (error) {
+    console.error("Error saving features:", error);
+    alert('Error saving changes. Please try again.');
+  }
+});
+
+loadFeatures();
+loadOrders();
+</script>
+</body>
+</html>
