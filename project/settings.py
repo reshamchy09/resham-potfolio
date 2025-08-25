@@ -26,11 +26,9 @@ SECRET_KEY = 'django-insecure-nh3r9-3sd*^vrtk(3#=9pdhi@e+)__x1*5pznos48*@65klc3#
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
     'resham-potfolio.onrender.com',
     'www.resamchaudhary.com.np',
     'resamchaudhary.com.np'
-      '127.0.0.1:8000',
 ]
 
 
