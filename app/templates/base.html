@@ -4,24 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ profile.name }} - {{ profile.title }}{% endblock %}</title>
-     <meta name="description" content="Portfolio of Resham Chaudhary - Django Developer, Python Developer, Flutter Developer, Kotlin, C++, C#, Node.js, Web & Mobile App Developer, Nepali Software Engineer, Freelancer. Specialized in backend, full stack, and cross-platform development.">
+    <meta name="description" content="Resham Chaudhary - Full Stack Developer specializing in Django, Kotlin, Flutter, Python, and cross-platform web & mobile apps. Nepali software engineer and freelancer.">
 
      <!-- Keywords -->
-    <meta name="keywords" content="Resham Chaudhary, Django Developer, Python Developer, Web Developer, Backend Developer, Portfolio, Freelancer, App Developer, iOS Developer, Android Developer, Flutter Developer, Kotlin Developer, Node.js Developer, MySQL, MongoDB, PostgreSQL, Full Stack Developer, Software Engineer, Mobile App Developer, API Developer, Cloud Developer, C++ Developer, C# Developer, Nepali Software Engineer, Web Engineer, Software Engineer Nepal">
+    <meta name="keywords" content="Resham Chaudhary - Full Stack Developer specializing in Django, Kotlin, Flutter, Python, and cross-platform web & mobile apps. Nepali software engineer and freelancer.">
     <meta name="author" content="Resham Chaudhary">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://resamchaudhary.com.np/">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-      <!-- Open Graph (for social media) -->
-  <meta property="og:title" content="Resham Chaudhary | Software & Web Developer Portfolio">
-  <meta property="og:description" content="Full-stack developer skilled in Django, Python, Flutter, Kotlin, C++, C#, Node.js, MySQL, MongoDB, PostgreSQL, and mobile app development. Based in Nepal.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.resamchaudhary.com.np">
-  <meta property="og:image" content="https://www.resamchaudhary.com.np/static/images/profile.jpg">
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Resham Chaudhary | Software Engineer & Developer">
-  <meta name="twitter:description" content="Django, Python, Flutter, Kotlin, C++, C#, Node.js, Mobile Apps & Web Development. Nepali Software Engineer Portfolio.">
-  <meta name="twitter:image" content="https://www.resamchaudhary.com.np/static/images/profile.jpg">
+   <!-- Open Graph / Social Sharing -->
+    <meta property="og:title" content="Resham Chaudhary - Full Stack Developer | Django, Kotlin, Flutter">
+    <meta property="og:description" content="Full Stack Developer specializing in Django, Kotlin, Flutter, Python, and cross-platform web & mobile apps. Nepali software engineer and freelancer.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://resamchaudhary.com.np/">
+    <meta property="og:image" content="https://resamchaudhary.com.np/assets/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Resham Chaudhary - Full Stack Developer | Django, Kotlin, Flutter">
+    <meta name="twitter:description" content="Full Stack Developer specializing in Django, Kotlin, Flutter, Python, and cross-platform web & mobile apps. Nepali software engineer and freelancer.">
+    <meta name="twitter:image" content="https://resamchaudhary.com.np/assets/og-image.png">
+
+    <!-- Schema.org JSON-LD for Person & Portfolio -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Resham Chaudhary",
+      "url": "https://resamchaudhary.com.np",
+      "sameAs": [
+        "https://www.facebook.com/reshamchaudhary",
+        "https://twitter.com/reshamchaudhary",
+        "https://www.linkedin.com/in/reshamchaudhary",
+        "https://www.instagram.com/reshamchaudhary",
+        "https://www.youtube.com/@reshamchaudhary"
+      ],
+      "jobTitle": "Full Stack Developer",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Freelancer"
+      },
+      "knowsLanguage": ["Python", "Django", "Kotlin", "Flutter", "C++", "C#", "Node.js"],
+      "description": "Full Stack Developer specializing in Django, Kotlin, Flutter, Python, and cross-platform web & mobile apps. Nepali software engineer and freelancer."
+    }
+    </script>
 
     
     <!-- Bootstrap 5 -->
@@ -1154,6 +1184,7 @@ select.form-control:focus {
                         <li><a href="{% url 'projects' %}" class="text-muted text-decoration-none">Projects</a></li>
                         <li><a href="{% url 'template_list' %}" class="text-muted text-decoration-none">Templates</a></li>
                         <li><a href="{% url 'contact' %}" class="text-muted text-decoration-none">Contact</a></li>
+                
                     </ul>
                 </div>
                 
@@ -1179,7 +1210,9 @@ select.form-control:focus {
                     {% endif %}
                 </div>
             </div>
-            
+            <!-- Add this within your existing <nav> element -->
+            <a class="nav-link" href="https://pythondevelopersites.blogspot.com/2025/08/potfolio-web-privacy-policy.html" target="_blank">Privacy Policy</a>
+
             <hr class="my-4" style="border-color: var(--dark-border);">
             
             <div class="row">

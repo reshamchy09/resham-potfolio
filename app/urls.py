@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from django.views.generic import TemplateView
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
@@ -16,6 +16,16 @@ urlpatterns = [
     path('templates/', views.template_list, name='template_list'),
     path('templates/<int:pk>/preview/', views.template_preview, name='template_preview'),
      path('calculator/', views.services_page, name='mobile_app_calculator'),
+
+
+
+
+
+
+
+
+  path('sitemap.xml', TemplateView.as_view(template_name="sitemap.xml", content_type='application/xml'), name='sitemap'),
+      path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type='text/plain')),
     
 
 ]
