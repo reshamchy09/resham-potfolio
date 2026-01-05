@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'resham-potfolio.onrender.com',
     'www.resamchaudhary.com.np',
-    'resamchaudhary.com.np'
+    'resamchaudhary.com.np',
+    '*'
 ]
 
 
